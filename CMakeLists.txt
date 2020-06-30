@@ -32,7 +32,7 @@ LINK_LIBRARIES(pthread)
 
 
 link_libraries(mbase mnet)
-add_executable(oop_muduo_server EchoServer.cpp)
+add_executable(echo_server EchoServer.cpp)
 
 
 # SimpleHttpServer
