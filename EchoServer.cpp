@@ -18,11 +18,20 @@ void onMessage(const TcpLinkSPtr& conn, Buffer* buf, Timestamp t){
 }
 
 
-int main() {
+int main(int argc, char **argv) {
+
+    if (argc > 2) {
+        muduo::LOG_INFO("usage: simple_http [thread_num(default 0)]");
+        return -1;
+    }
+
+    int thread_num = 0;
+    if (argc == 2)
+        thread_num = atoi(argv[1]);
 
     EventLoop* loop = new EventLoop();
     InetAddress local(8080);
-    TcpServer* server = new TcpServer(loop, local, "server", 0);
+    TcpServer* server = new TcpServer(loop, local, "server", thread_num);
 
     server->setMessageCallback(onMessage);
     server->setConnectionCallback(onConnect);
