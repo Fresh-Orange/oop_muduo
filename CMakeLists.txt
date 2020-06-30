@@ -27,17 +27,12 @@ set(CXX_FLAGS
 
 add_subdirectory(./base)
 add_subdirectory(./net)
-# add_subdirectory(./net/http)
-# add_subdirectory(./net/inspect)
-# add_subdirectory(./net/simple_http)
 
 LINK_LIBRARIES(pthread)
 
-#set(CMAKE_INCLUDE_PATH "./base;./net")
 
 link_libraries(mbase mnet)
 add_executable(oop_muduo_server EchoServer.cpp)
-add_executable(oop_muduo_client EchoClient.cpp)
 
 
 # SimpleHttpServer
