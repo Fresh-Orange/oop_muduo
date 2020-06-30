@@ -1,9 +1,10 @@
 
-#include "HttpServer.h"
-#include "HttpRequest.h"
-#include "HttpResponse.h"
-#include "../../base/Timestamp.h"
-#include "../../base/Logging.h"
+#include "net/simple_http/HttpRequest.h"
+#include "net/simple_http/HttpResponse.h"
+#include "net/simple_http/HttpServer.h"
+#include "base/Timestamp.h"
+#include "base/Logging.h"
+#include "net/EventLoop.h"
 
 #include <unistd.h>
 #include <string>
@@ -69,7 +70,9 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    int thread_num = atoi(argv[1]);
+    int thread_num = 0;
+    if (argc == 2)
+        thread_num = atoi(argv[1]);
 
     muduo::LOG_INFO("Hellow HttpServer");
     ::signal(SIGPIPE, SIG_IGN);

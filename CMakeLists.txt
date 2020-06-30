@@ -39,5 +39,5 @@ add_executable(echo_server EchoServer.cpp)
 
 aux_source_directory(net/simple_http http_SRCS)
 
-add_executable(simple_http ${http_SRCS})
+add_executable(simple_http SimpleHttpServer.cpp ${http_SRCS})
 target_link_libraries(simple_http mnet)
