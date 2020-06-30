@@ -3,6 +3,7 @@
 
 #include "../../base/copyable.h"
 #include "../../base/Timestamp.h"
+#include <cassert>
 
 #include <map>
 #include <string>
