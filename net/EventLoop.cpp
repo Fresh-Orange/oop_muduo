@@ -196,6 +196,7 @@ WakeupFd::~WakeupFd()
 
 void WakeupFd::wakeupWrite()
 {
+    MutexLockGuard lock(mutex_);
     uint64_t one = 1;
     ssize_t n = ::write(fd_, &one, sizeof one);
 
@@ -207,6 +208,7 @@ void WakeupFd::wakeupWrite()
 
 void WakeupFd::handleRead(Timestamp& receiveTime)
 {
+    MutexLockGuard lock(mutex_);
     uint64_t one = 1;
     ssize_t n = ::read(fd_, &one, sizeof one);
 
