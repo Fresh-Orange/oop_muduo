@@ -212,12 +212,8 @@ void WakeupFd::handleRead(Timestamp& receiveTime)
     uint64_t one = 1;
     ssize_t n = ::read(fd_, &one, sizeof one);
 
-    // usleep(100); // todo : just try
-
-    printf("END wakeupRead, try read fd = %d\n", fd_);
     if (n != sizeof one || errno == EAGAIN)
     {
-        printf("ERROR wakeupRead, try read fd = %d\n", fd_);
         LOG_ERROR("Fail! read %d bytes", n);
     }
 }
