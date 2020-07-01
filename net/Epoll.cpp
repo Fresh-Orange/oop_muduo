@@ -122,7 +122,6 @@ void Epoll::update(int operation, FdHandler* fdHandler)
     {
         LOG_FATAL("epoll_ctl op = %s, fd = %d", operation2String(operation).c_str(), fd);
     }
-    , fd, fdHandler->event2string().c_str());
 }
 
 std::string Epoll::operation2String(int op)
