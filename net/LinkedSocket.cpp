@@ -143,7 +143,6 @@ void LinkedSocket::shutdownInLoop()
 
     if (!isWriting())
     {
-        LOG_TRACE("shutdownWrite fd = %d", fd_);
         sockets::shutdownWrite(fd_);
     }
 }
@@ -169,7 +168,6 @@ void LinkedSocket::forceCloseInLoop()
 
 void LinkedSocket::handleRead(Timestamp& receiveTime)
 {
-    LOG_TRACE("LinkedSocket reading");
     loop_->assertInLoopThread();
     int savedErrno = 0;
     ssize_t n = inputBuffer_.readFd(fd_, &savedErrno);
@@ -180,7 +178,6 @@ void LinkedSocket::handleRead(Timestamp& receiveTime)
     }
     else if (n == 0)
     {
-        LOG_TRACE("handleRead == 0, closing");
         handleClose();
     }
     else
@@ -226,7 +223,6 @@ void LinkedSocket::handleWrite()
 void LinkedSocket::handleClose()
 {
     loop_->assertInLoopThread();
-    LOG_TRACE("LinkedSocket::handleClose, now state = %d", state_);
     assert(state_ == kConnected || state_ == kDisconnecting);
     setState(kDisconnected);
 
@@ -241,7 +237,6 @@ void LinkedSocket::handleError()
 }
 
 void LinkedSocket::prepare() {
-    LOG_TRACE("LinkedSocket::prepare, fd = %d", fd_);
     enableReading();
     updateInPoll(AddEvent);
 }

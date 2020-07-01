@@ -19,7 +19,6 @@ TcpServer::TcpServer(EventLoop *baseLoop, const InetAddress& listenAddr,
     threadPoll_(new EventLoopThreadPool(base_loop_, threadNum, name)) // todo: 这里的name
     // listeningSocket_(new ListeningSocket(base_loop_, listenAddr))
 {
-    LOG_TRACE("listeningSocket_ = %d", listeningSocket_.get());
     listeningSocket_ = make_unique<ListeningSocket>(base_loop_, this, listenAddr);
 }
 
@@ -56,25 +55,18 @@ void TcpServer::newConnection(int socketfd, const InetAddress &peerAddr) {
 
     name2connection[connName] = conn;
     ioLoop_ptr->runInLoop(std::bind(&LinkedSocket::prepare, conn));
-    LOG_TRACE("after newConnection, conn name = %s, conn count = %d", connName.c_str(), conn.use_count());
 }
 
 void TcpServer::delConnection(TcpLinkSPtr &conn) {
-    LOG_TRACE("TcpServer::delConnection");
-    // todo: 注释掉runInLoop是因为无法通过eventfd唤醒主线程，原因未知
-    // base_loop_->runInLoop(std::bind(&TcpServer::removeConnectionInLoop, this, conn));
-    // todo: just try
-    name2connection.erase(conn->name());
-    LOG_TRACE("HttpServer::after removeConnectionInLoop, conn count = %d", conn.use_count());
+    base_loop_->runInLoop(std::bind(&TcpServer::removeConnectionInLoop, this, conn));
+
 }
 
 void TcpServer::removeConnectionInLoop(const TcpLinkSPtr & conn)
 {
-    LOG_TRACE("HttpServer::removeConnectionInLoop");
     base_loop_->assertInLoopThread();
     LOG_INFO("TcpServer::removeConnectionInLoop [%s] - connection %s", name_.c_str(), conn->name().c_str());
     name2connection.erase(conn->name());
-    LOG_TRACE("HttpServer::after removeConnectionInLoop, conn count = %d", conn.use_count());
 }
 
 void TcpServer::rcvMessage(const TcpLinkSPtr &conn, Buffer *buf, Timestamp time) {

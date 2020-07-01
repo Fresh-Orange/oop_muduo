@@ -16,7 +16,6 @@ const int FdHandler::kReadEvent = POLLIN | POLLPRI;
 const int FdHandler::kWriteEvent = POLLOUT;
 
 void FdHandler::handleEvent(Timestamp receiveTime) {
-    LOG_TRACE("handleEvent fd=%d, revents=%d", fd_, revents_);
 
     ///
     /// POLLIN     0x0001 普通或优先级带数据可读

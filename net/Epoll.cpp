@@ -67,7 +67,6 @@ void Epoll::removeHandler(FdHandler *fdHandler) {
     assert(fd2handler[fd] == fdHandler);
     assert(fdHandler->isNoneEvent());
 
-    LOG_TRACE("Remove fd(%d) in fd2handler", fd);
     fd2handler.erase(fd);
 
     if (fdHandler->getStateInPoll() == FdHandler::StateInPoll::Added)
@@ -79,14 +78,12 @@ void Epoll::removeHandler(FdHandler *fdHandler) {
 
 void Epoll::updateHandler(FdHandler *fdHandler) {
     FdHandler::StateInPoll state = fdHandler->getStateInPoll();
-    LOG_TRACE("fd = %d events = %d state = %d", fdHandler->fd(), fdHandler->events(), fdHandler->getStateInPoll());
     int fd = fdHandler->fd();
     if (state == FdHandler::StateInPoll::New || state == FdHandler::StateInPoll::Deleted)
     {
         // a new one, add with EPOLL_CTL_ADD
         if (state == FdHandler::StateInPoll::New)
         {
-            LOG_TRACE("Add fd(%d) in fd2handler", fd);
             assert(fd2handler.find(fd) == fd2handler.end());
             fd2handler[fd] = fdHandler;
         }
@@ -121,14 +118,10 @@ void Epoll::update(int operation, FdHandler* fdHandler)
 
     int fd = fdHandler->fd();
 
-
-    LOG_TRACE("epoll_ctl op = %s fd =  %d event = { %s }", operation2String(operation).c_str()
-            , fd, fdHandler->event2string().c_str());
     if (::epoll_ctl(epoll_fd, operation, fd, &event) < 0)
     {
         LOG_FATAL("epoll_ctl op = %s, fd = %d", operation2String(operation).c_str(), fd);
     }
-    LOG_TRACE("END of epoll_ctl op = %s fd =  %d event = { %s }", operation2String(operation).c_str()
     , fd, fdHandler->event2string().c_str());
 }
 

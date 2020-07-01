@@ -196,12 +196,8 @@ WakeupFd::~WakeupFd()
 
 void WakeupFd::wakeupWrite()
 {
-    //MutexLockGuard lock(mutex_);
-
-    LOG_TRACE("wakeupWrite, try write fd = %d which is reading = %d", fd_, isReading());
     uint64_t one = 1;
     ssize_t n = ::write(fd_, &one, sizeof one);
-    LOG_TRACE("END wakeupWrite, try write fd = %d", fd_);
 
     if (n != sizeof one || errno == EAGAIN)
     {
@@ -211,9 +207,6 @@ void WakeupFd::wakeupWrite()
 
 void WakeupFd::handleRead(Timestamp& receiveTime)
 {
-    //MutexLockGuard lock(mutex_);
-
-    LOG_TRACE("wakeupRead, reading fd = %d", fd_);
     uint64_t one = 1;
     ssize_t n = ::read(fd_, &one, sizeof one);
 
