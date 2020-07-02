@@ -226,6 +226,10 @@ void LinkedSocket::handleClose()
     assert(state_ == kConnected || state_ == kDisconnecting);
     setState(kDisconnected);
 
+    // 暂时的解决方案(未知原因，该函数未调用完却又重复read，所以先disable掉)
+    disableAll();
+    updateInPoll(ModEvent);
+
     TcpLinkSPtr tcpLinkSPtr(shared_from_this());
     owner_->delConnection(tcpLinkSPtr);
 }

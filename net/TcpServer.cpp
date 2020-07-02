@@ -53,6 +53,7 @@ void TcpServer::newConnection(int socketfd, const InetAddress &peerAddr) {
     InetAddress localAddr(sockets::getLocalAddr(socketfd));
     TcpLinkSPtr conn(new LinkedSocket(this, ioLoop_ptr, connName, socketfd, localAddr, peerAddr));
 
+    assert(name2connection.find(connName) == name2connection.end());
     name2connection[connName] = conn;
     ioLoop_ptr->runInLoop(std::bind(&LinkedSocket::prepare, conn));
 }
@@ -61,6 +62,7 @@ void TcpServer::delConnection(TcpLinkSPtr &conn) {
     // todo: 注释掉runInLoop是因为无法通过eventfd唤醒主线程，原因未知
     // base_loop_->runInLoop(std::bind(&TcpServer::removeConnectionInLoop, this, conn));
     name2connection.erase(conn->name());
+    LOG_TRACE("HttpServer::after removeConnectionInLoop, conn count = %d", conn.use_count());
 }
 
 void TcpServer::removeConnectionInLoop(const TcpLinkSPtr & conn)
