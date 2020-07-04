@@ -6,6 +6,7 @@
 #define OOP_MUDUO_LINKEDSOCKET_H
 
 #include <memory>
+#include <functional>
 #include "FdHandler.h"
 #include "../base/InetAddress.h"
 #include "../base/Buffer.h"
